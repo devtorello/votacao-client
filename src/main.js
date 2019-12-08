@@ -7,14 +7,18 @@ import VueRouter from 'vue-router'
 import { router } from './router'
 import App from './App.vue'
 import Vue from 'vue'
+import * as UIkit from 'uikit'
+import Icons from 'uikit/dist/js/uikit-icons'
 
 import './assets/scss/app.scss'
+
+UIkit.use(Icons)
 
 Vue.config.productionTip = false
 
 const main = async () => {
   const apolloClient = new ApolloClient({
-    link: new HttpLink({ uri: 'endpoint' }),
+    link: new HttpLink({ uri: 'http://localhost:4000' }),
     cache: new InMemoryCache(),
     connectToDevTools: true
   })
