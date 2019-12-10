@@ -1,6 +1,6 @@
 <template>
   <div class="uk-card uk-card-default uk-width-3-4 uk-card-body uk-dark">
-    <div v-if="!voted">
+    <div v-if="voted === false">
       <h1>Escolha seu candidato</h1>
       <hr>
       <div class="uk-overflow-auto uk-height-medium">
@@ -18,7 +18,7 @@
               <td>{{ c.fullName }}</td>
               <td>{{ c.Turma }}</td>
               <td>{{ c.RA }}</td>
-              <td><button type="button" class="uk-button uk-button-secondary" @click="vote(c.RA)">Votar</button></td>
+              <td><button type="button" class="uk-button uk-button-secondary" @click="voteNow(c.RA)">Votar</button></td>
             </tr>
           </tbody>
         </table>
@@ -51,7 +51,8 @@ export default {
       user: {},
       candidate: [],
       ra: '',
-      voted: false
+      voted: false,
+      vote: {}
     }
   },
   apollo: {
@@ -62,23 +63,23 @@ export default {
         Turma,
         URL
       }
+    }`,
+    vote: gql`query {
+      vote: getUserVotes {
+        candidateRA
+      }
     }`
   },
-  async created () { 
+  async created () {
     this.user = User.data
-    console.log(this.user)
-
-    if (User.data) {
-      let vote = await this.getVote(this.user.id)
-
-      if (vote)
-        this.voted = true
-      else
-        this.voted = false
-    }
+    
+    if (this.vote.candidateRA != null)
+      this.voted = true
+    else
+      this.voted = false
   },
   methods: {
-    vote(ra) {
+    voteNow(ra) {
       this.$apollo.mutate({
         mutation: gql`
           mutation (
@@ -119,24 +120,6 @@ export default {
       let { data } = user
 
       return data
-    },
-    async getVote() {
-      let vote
-      await this.$apollo.query({
-        query: gql`query ($userId: String!) {
-          getUserVotes(userId: $userId)  {
-            candidateRA
-          }
-        }`,
-        variables: {
-          userId: this.user.id
-        }
-      }).then(data => {
-        if (data)
-          vote = data
-      })
-
-      return vote
     }
   }
 }

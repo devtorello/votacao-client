@@ -43,12 +43,12 @@ export default {
   },
   apollo: {
     candidate: gql`query {
-        candidate: allCandidates {
-          fullName,
-          RA,
-          Turma,
-          URL
-        }
+      candidate: allCandidates {
+        fullName,
+        RA,
+        Turma,
+        URL
+      }
     }`
   }
 }

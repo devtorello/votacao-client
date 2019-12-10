@@ -48,6 +48,25 @@ export default {
           URL
         }
     }`
+  },
+  async mounted () {
+    await this.getVotes()
+  },
+  methods: {
+    async getVotes() {
+      this.$apollo.query({
+        query: gql`query ($candidateRA: String!) {
+          countCandidateVotes (candidateRA: $candidateRA) {
+            id
+          }
+        }`,
+        variables: {
+          candidateRA: '124910238'
+        }
+      }).then(data => {
+        console.log(data)
+      })
+    }
   }
 }
 </script>

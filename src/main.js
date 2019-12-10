@@ -11,14 +11,31 @@ import * as UIkit from 'uikit'
 import Icons from 'uikit/dist/js/uikit-icons'
 
 import './assets/scss/app.scss'
+import { ApolloLink, concat } from 'apollo-link'
 
 UIkit.use(Icons)
 
 Vue.config.productionTip = false
 
 const main = async () => {
+  const token = localStorage.getItem('vot_token')
+
+  const httpLink = new HttpLink({
+    uri: 'http://localhost:4000' 
+  })
+
+  const authMid = new ApolloLink((operation, foward) => {
+    operation.setContext({
+      headers: {
+        authorization: `Bearer ${token}`
+      }
+    })
+
+    return foward(operation)
+  })
+
   const apolloClient = new ApolloClient({
-    link: new HttpLink({ uri: 'http://localhost:4000' }),
+    link: concat(authMid, httpLink),
     cache: new InMemoryCache(),
     connectToDevTools: true
   })

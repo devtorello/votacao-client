@@ -59,7 +59,7 @@ export default {
         }
 
         Auth.set(data.data.signIn.token)
-        this.$router.push(`/vote/${this.RA}`)
+        this.$router.push(`/vote`)
       })
     }
   }
