@@ -42,10 +42,7 @@ const main = async () => {
 
   let LinkApollo = ''
 
-  if (token === null)
-    LinkApollo = httpLink
-  else
-    LinkApollo = concat(authMid, httpLink)
+  LinkApollo = concat(authMid, httpLink)
 
   const apolloClient = new ApolloClient({
     link: LinkApollo,

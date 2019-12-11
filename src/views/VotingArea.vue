@@ -135,10 +135,6 @@ export default {
       let { data } = user
 
       return data
-    },
-    logout() {
-      Auth.remove()
-      this.$router.push('/')
     }
   }
 }
