@@ -4,21 +4,63 @@
       <legend class="uk-legend">Entrar</legend>
       <div class="uk-margin">
         <label class="uk-form-label">CPF</label>
-        <input type="text" class="uk-input">
+        <input type="text" class="uk-input" v-model="CPF">
       </div>
       <div class="uk-margin">
         <label class="uk-form-label">Senha</label>
-        <input type="text" class="uk-input">
+        <input type="text" class="uk-input" v-model="senha">
       </div>
       <div class="uk-margin">
-        <button class="uk-button uk-button-default" type="button">Entrar</button>
+        <button class="uk-button uk-button-default" type="button" @click="login">Entrar</button>
       </div>
     </form>
   </div>
 </template>
 
 <script>
-export default {
+import Auth from '../../utils/auth'
+import gql from 'graphql-tag'
 
+export default {
+  data() {
+    return {
+      CPF: '',
+      senha: ''
+    }
+  },
+  methods: {
+    login() {
+      if (!this.CPF || !this.senha) {
+        alert('Os dados estão faltando!')
+        return
+      }
+
+      this.$apollo.mutate({
+        mutation: gql`
+          mutation (
+            $CPF: String!,
+            $password: String!
+          ) {
+            signIn(CPF: $CPF, password: $password) {
+              token,
+              CPF
+            }
+          }
+        `,
+        variables: {
+          CPF: this.CPF,
+          password: this.senha
+        }
+      }).then(data => {
+        if (!data) {
+          alert('Dados incorretos!')
+          return
+        }
+
+        Auth.set(data.data.signIn.token)
+        this.$router.push(`/vote`)
+      })
+    }
+  }
 }
 </script>

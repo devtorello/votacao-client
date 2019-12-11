@@ -4,30 +4,26 @@
       <legend class="uk-legend">Cadastro</legend>
       <div class="uk-margin">
         <label class="uk-form-label">Nome</label>
-        <input type="text" class="uk-input">
+        <input type="text" class="uk-input" v-model="nome">
       </div>
       <div class="uk-margin">
         <label class="uk-form-label">Sobrenome</label>
-        <input type="text" class="uk-input">
-      </div>
-      <div class="uk-margin">
-        <label class="uk-form-label">Apartamento</label>
-        <input type="text" class="uk-input">
+        <input type="text" class="uk-input" v-model="sobrenome">
       </div>
       <div class="uk-margin">
         <label class="uk-form-label">CPF</label>
-        <input type="text" class="uk-input">
+        <input type="text" class="uk-input" v-model="CPF">
       </div>
       <div class="uk-margin">
         <label class="uk-form-label">Senha</label>
-        <input type="text" class="uk-input">
+        <input type="text" class="uk-input" v-model="senha">
       </div>
       <div class="uk-margin">
         <label class="uk-form-label">Confirmar Senha</label>
-        <input type="text" class="uk-input">
+        <input type="text" class="uk-input" v-model="confSenha">
       </div>
       <div class="uk-margin">
-        <button class="uk-button uk-button-default" type="button">Registrar</button>
+        <button class="uk-button uk-button-default" type="button" @click="createUser">Registrar</button>
         <button class="uk-button uk-button-text uk-margin-small-left" type="button">Cancelar</button>
       </div>
     </form>
@@ -35,7 +31,59 @@
 </template>
 
 <script>
-export default {
+import gql from 'graphql-tag'
 
+export default {
+  data() {
+    return {
+      nome: '',
+      sobrenome: '',
+      CPF: '',
+      senha: '',
+      confSenha: ''
+    }
+  },
+  methods: {
+    createUser() {
+      if (this.senha != this.confSenha) {
+        alert('Senhas incorretas!')
+        return
+      }
+
+      this.$apollo.mutate({
+        mutation: gql`
+          mutation (
+            $firstName: String!,
+            $lastName: String!,
+            $CPF: String!,
+            $password: String!
+          ) {
+            signUp(firstName: $firstName, lastName: $lastName, CPF: $CPF, password: $password) {
+              id
+            }
+          }
+        `,
+        variables: {
+          firstName: this.nome,
+          lastName: this.sobrenome,
+          CPF: this.CPF,
+          password: this.senha
+        }
+      }).then(data => {
+        if (!data) {
+          alert('Erro!')
+          return
+        }
+
+        this.nome = ''
+        this.sobrenome = ''
+        this.CPF = ''
+        this.senha = ''
+        this.confSenha = ''
+
+        this.$router.push('/')
+      })
+    }
+  }
 }
 </script>
