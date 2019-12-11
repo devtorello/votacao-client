@@ -40,10 +40,12 @@ export default {
       else
         this.token = Auth.get()
 
+      if (!this.token)
+        return
       let decoded = jwtdecode(this.token)
 
       if (decoded) {
-        await this.$apollo.query({
+        const { data: user } = await this.$apollo.query({
           query: gql`query ($RA: String!) {
             fetchUser (RA: $RA) {
               id,
@@ -56,14 +58,11 @@ export default {
           variables: {
             RA: decoded.ra
           }
-        }).then(data => {
-          let { data: user } = data
-
-          User.load(user.fetchUser)
         })
+        
+        User.load(user.fetchUser)
+        this.user = User.data
       }
-
-      this.user = User.data
     }
   }
 }

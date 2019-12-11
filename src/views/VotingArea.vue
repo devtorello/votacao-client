@@ -1,7 +1,17 @@
 <template>
   <div class="uk-card uk-card-default uk-width-3-4 uk-card-body uk-dark">
     <div v-if="voted === false">
-      <h1>Escolha seu candidato</h1>
+      <div uk-grid>
+        <div class="uk-width-expand">
+          <h1>Escolha seu candidato</h1>
+        </div>
+        <div>
+          <button class="uk-button uk-button-secondary" type="button" @click="logout">Logout</button>
+        </div>
+      </div>
+        <!-- <div class="uk-margin uk-flex uk-flex-right@l">
+          <button class="uk-button uk-button-secondary" type="button">Logout</button>
+        </div> -->
       <hr>
       <div class="uk-overflow-auto uk-height-medium">
         <table class="uk-table uk-table-hover uk-table-middle uk-table-divider">
@@ -22,20 +32,21 @@
             </tr>
           </tbody>
         </table>
-        <div class="uk-margin uk-flex uk-flex-right@l">
-          <button class="uk-button uk-button-secondary" type="button">Logout</button>
-        </div>
       </div>
     </div>
     <div class="uk-height-small" v-else>
-      <h1>Seu voto já foi computado!</h1>
+      <div uk-grid>
+        <div class="uk-width-expand">
+          <h1>Seu voto já foi computado!</h1>
+        </div>
+        <div>
+          <button class="uk-button uk-button-secondary" type="button" @click="logout">Logout</button>
+        </div>
+      </div>
       <hr>
       <div class="uk-text-center">
         Você já votou e seu voto já foi computado,
         portanto, espere o resultado da votação!
-      </div>
-      <div class="uk-margin uk-flex uk-flex-right@l">
-        <button class="uk-button uk-button-secondary" type="button">Logout</button>
       </div>
     </div>
   </div>
@@ -43,6 +54,7 @@
 
 <script>
 import User from '../utils/user'
+import Auth from '../utils/auth'
 import gql from 'graphql-tag'
 
 export default {
@@ -79,6 +91,11 @@ export default {
       this.voted = false
   },
   methods: {
+    logout () {
+      Auth.remove()
+      User.clear()
+      this.$router.push('/')
+    },
     voteNow(ra) {
       this.$apollo.mutate({
         mutation: gql`

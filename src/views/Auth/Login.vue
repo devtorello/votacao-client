@@ -61,6 +61,10 @@ export default {
         Auth.set(data.data.signIn.token)
         this.$router.push(`/vote`)
       })
+      .catch(() => {
+        alert('Erro ao autenticar, verifique os dados e tente novamente!')
+        
+      })
     }
   }
 }

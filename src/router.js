@@ -10,7 +10,7 @@ const Route = new Router({ linkExactActiveClass: 'uk-active' }, comp => {
 
 Route.add('/', '').children(Route => {
     Route.add('', 'Home')
-    Route.add('login', 'Auth/Login', 'login').guard(GuestGuard('/'))
+    Route.add('login', 'Auth/Login', 'login').guard([GuestGuard('/')])
     Route.add('register', 'Auth/Register', 'register')
     Route.add('vote', 'VotingArea').props(true).guard([AdminGuard('/admin')])
     Route.add('admin', 'Admin').guard([UserGuard('/vote')]).children(Route => {

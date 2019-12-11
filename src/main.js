@@ -13,18 +13,24 @@ import Icons from 'uikit/dist/js/uikit-icons'
 import './assets/scss/app.scss'
 import { ApolloLink, concat } from 'apollo-link'
 
+import Auth from './utils/auth'
+
 UIkit.use(Icons)
 
 Vue.config.productionTip = false
 
 const main = async () => {
-  const token = localStorage.getItem('vot_token')
 
   const httpLink = new HttpLink({
     uri: 'http://localhost:4000' 
   })
 
   const authMid = new ApolloLink((operation, foward) => {
+    const token = Auth.get()
+
+    if (!token)
+      return foward(operation)
+
     operation.setContext({
       headers: {
         authorization: `Bearer ${token}`
