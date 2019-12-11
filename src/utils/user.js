@@ -9,7 +9,7 @@ export default {
 
     load(user) {
       for (let key in user) {
-        if (this.data.hasOwnProperty(key) && key != 'load' && key != 'clear')
+        // if (this.data.hasOwnProperty(key) && key != 'load' && key != 'clear')
           this.data[key] = user[key]
       }
     },

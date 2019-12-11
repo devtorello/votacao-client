@@ -21,7 +21,7 @@
 <script>
 import Auth from '../../utils/auth'
 import gql from 'graphql-tag'
-// import User from '../../utils/user'
+import User from '../../utils/user'
 
 export default {
   data() {
@@ -53,13 +53,29 @@ export default {
           CPF: this.CPF,
           password: this.senha
         }
-      }).then(data => {
+      }).then(async data => {
         if (!data) {
           alert('Dados incorretos!')
           return
         }
-
         Auth.set(data.data.signIn.token)
+        const { data: user }  = await this.$apollo.query({
+            query: gql`query ($CPF: String!) {
+              fetchUser (CPF: $CPF) {
+                id,
+                firstName,
+                lastName,
+                CPF,
+                level
+              }
+            }`,
+            variables: {
+              CPF: this.CPF
+            }
+          })
+          User.clear()
+          User.load(user.fetchUser)
+          location.reload()
         this.$router.push(`/vote`)
       }).catch(() => {
         alert('Os dados podem estar incorretos! Tente novamente.')
