@@ -21,7 +21,7 @@
               <td>{{ c.RA }}</td>
               <td>{{ c.Turma }}</td>
               <td>
-                <button class="uk-button uk-button-default">Remover</button>
+                <button class="uk-button uk-button-default" type="button" @click="remove(c.id)">Remover</button>
               </td>
             </tr>
           </tbody>
@@ -42,6 +42,7 @@ export default {
   apollo: {
     candidate: gql`query {
       candidate: allCandidates {
+        id,
         fullName,
         RA,
         Turma,
@@ -59,6 +60,27 @@ export default {
   mounted () {
     this.$apollo.queries.candidate.refetch()
     this.$apollo.queries.votes.refetch()
+  },
+  methods: {
+    remove(item) {
+      this.$apollo.mutate({
+        mutation: gql`
+          mutation (
+            $id: String!
+          ) {
+              deleteCandidate (id: $id) {
+                id
+            }
+          }
+        `,
+        variables: {
+          id: item
+        }
+      }).then(() => {
+        alert('Usuário excluído!')
+        this.$apollo.queries.candidate.refetch()
+      })
+    }
   }
 }
 </script>

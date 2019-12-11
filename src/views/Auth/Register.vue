@@ -85,6 +85,7 @@ export default {
         this.senha = ''
         this.confSenha = ''
 
+        alert('Usuário criado!')
         this.$router.push('/')
       })
     }

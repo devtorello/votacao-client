@@ -16,7 +16,7 @@ export default {
   
     clear() {
       this.data.id = null
-      this.data.name = null
+      this.data.firstName = null
       this.data.lastName = null
       this.data.RA = null
       this.data.level = null

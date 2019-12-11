@@ -62,6 +62,9 @@ export default {
     }`,
   },
   mounted () {
+    this.$apollo.queries.candidate.refetch()
+    this.$apollo.queries.votes.refetch()
+
     this.countVotes()
     this.wins()
   },

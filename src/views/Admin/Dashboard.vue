@@ -32,6 +32,10 @@ export default {
       candidate: []
     }
   },
+  mounted () {
+    this.$apollo.queries.candidate.refetch()
+    this.$apollo.queries.votes.refetch()
+  },
   apollo: {
     votes: gql`query {
       votes: allVotes {
@@ -51,7 +55,7 @@ export default {
   },
   methods: {
     logout() {
-      User.clear
+      User.clear()
       Auth.remove()
       this.$router.push('/')
     }

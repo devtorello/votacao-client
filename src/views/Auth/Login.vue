@@ -21,6 +21,7 @@
 <script>
 import Auth from '../../utils/auth'
 import gql from 'graphql-tag'
+// import User from '../../utils/user'
 
 export default {
   data() {
@@ -59,6 +60,7 @@ export default {
         }
 
         Auth.set(data.data.signIn.token)
+
         this.$router.push(`/vote`)
       })
       .catch(() => {
