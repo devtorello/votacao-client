@@ -2,11 +2,11 @@
     <main>
       <div uk-grid class="uk-margin">
         <div class="uk-width-1-3">
-          <img src="https://placehold.it/400x300" class="uk-width-1-1" uk-img>
+          <img :src="winner.URL" class="uk-width-1-1" uk-img>
         </div>
         <div class="uk-width-2-3">
-          <h2>O vencedor é <b class="uk-text-secondary">Murilo Pereti Tavares</b></h2>
-          <h4 style="margin: 0px" class="">O candidato Murilo Pereti Tavares, venceu a eleição com um total de 66 votos, representando 74% dos votos.</h4>
+          <h2>O vencedor é <b class="uk-text-secondary">{{ winner.fullName }}</b></h2>
+          <h4 style="margin: 0px" class="">O candidato {{ winner.fullName }}, venceu a eleição com um total de {{ winner.count }} votos.</h4>
         </div>
       </div>
       <div class=" uk-overflow-auto uk-height-small">
@@ -20,11 +20,11 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="c of candidate" :key="c.RA">
+            <tr v-for="c of candidates" :key="c.RA">
               <td>{{ c.fullName }}</td>
               <td>{{ c.RA }}</td>
               <td>{{ c.Turma }}</td>
-              <td>66</td>
+              <td>{{ c.count }}</td>
             </tr>
           </tbody>
         </table>
@@ -38,7 +38,10 @@ import gql from 'graphql-tag'
 export default {
   data() {
     return {
-      candidate: []
+      candidate: [],
+      votes: [],
+      candidates: {},
+      winner: {}
     }
   },
   apollo: {
@@ -49,7 +52,47 @@ export default {
         Turma,
         URL
       }
-    }`
+    }`,
+    votes: gql`query {
+      votes: allVotes {
+        id
+        candidateRA
+        userId  
+      }
+    }`,
+  },
+  mounted () {
+    this.countVotes()
+    this.wins()
+  },
+  methods: {
+    countVotes() {
+      this.candidates = {}
+
+      for (let c of this.candidate) {
+        let count = 0
+        for (let v of this.votes) {
+          if (c.RA === v.candidateRA)
+            count++
+        }
+
+        this.candidates[c.RA] = c
+        this.candidates[c.RA].count = count
+
+        count = 0
+      }
+    },
+    wins() {
+      const candidateList = Object.keys(this.candidates).map(i => this.candidates[i])
+      let prevVal = 0
+
+      for (let c of candidateList) {
+        if (c.count > prevVal) {
+          prevVal = c.count
+          this.winner = c
+        }
+      }
+    }
   }
 }
 </script>

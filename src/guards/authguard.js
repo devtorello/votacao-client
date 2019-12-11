@@ -9,7 +9,7 @@ export const AuthGuard = (redirectPath) => ({ next }) => {
 }
 
 export const GuestGuard = (redirectPath) => ({ next }) => {
-	if (Auth.isGuest)
+	if (Auth.isGuest && Auth.state.token)
         return next(redirectPath)
         
 	next()

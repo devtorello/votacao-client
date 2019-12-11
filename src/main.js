@@ -19,6 +19,7 @@ Vue.config.productionTip = false
 
 const main = async () => {
   const token = localStorage.getItem('vot_token')
+  console.log(token)
 
   const httpLink = new HttpLink({
     uri: 'http://localhost:4000' 
@@ -27,15 +28,22 @@ const main = async () => {
   const authMid = new ApolloLink((operation, foward) => {
     operation.setContext({
       headers: {
-        authorization: `Bearer ${token}`
+        authorization: token !== null ? `Bearer ${token}` : null
       }
     })
 
     return foward(operation)
   })
 
+  let LinkApollo = ''
+
+  if (token === null)
+    LinkApollo = httpLink
+  else
+    LinkApollo = concat(authMid, httpLink)
+
   const apolloClient = new ApolloClient({
-    link: concat(authMid, httpLink),
+    link: LinkApollo,
     cache: new InMemoryCache(),
     connectToDevTools: true
   })

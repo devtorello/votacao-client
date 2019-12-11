@@ -22,9 +22,6 @@
             </tr>
           </tbody>
         </table>
-        <div class="uk-margin uk-flex uk-flex-right@l">
-          <button class="uk-button uk-button-secondary" type="button">Logout</button>
-        </div>
       </div>
     </div>
     <div class="uk-height-small" v-else>
@@ -34,9 +31,9 @@
         Você já votou e seu voto já foi computado,
         portanto, espere o resultado da votação!
       </div>
-      <div class="uk-margin uk-flex uk-flex-right@l">
-        <button class="uk-button uk-button-secondary" type="button">Logout</button>
-      </div>
+    </div>
+    <div class="uk-margin uk-flex uk-flex-right@l">
+      <button class="uk-button uk-button-small uk-button-secondary" type="button" @click="logout">Logout</button>
     </div>
   </div>
 </template>
@@ -44,6 +41,7 @@
 <script>
 import User from '../utils/user'
 import gql from 'graphql-tag'
+import Auth from '../utils/auth'
 
 export default {
   data() {
@@ -83,17 +81,15 @@ export default {
       this.$apollo.mutate({
         mutation: gql`
           mutation (
-            $candidateRA: String!,
-            $userId: String!
+            $candidateRA: String!
           ) {
-            newVote(candidateRA: $candidateRA, userId: $userId) {
+            newVote(candidateRA: $candidateRA) {
               id
             }
           }
         `,
         variables: {
-          candidateRA: ra,
-          userId: User.data.id
+          candidateRA: ra
         }
       }).then(data => {
         if (data)
@@ -120,6 +116,10 @@ export default {
       let { data } = user
 
       return data
+    },
+    logout() {
+      Auth.remove()
+      this.$router.push('/')
     }
   }
 }
