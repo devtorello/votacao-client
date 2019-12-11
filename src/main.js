@@ -33,15 +33,22 @@ const main = async () => {
 
     operation.setContext({
       headers: {
-        authorization: `Bearer ${token}`
+        authorization: token !== null ? `Bearer ${token}` : null
       }
     })
 
     return foward(operation)
   })
 
+  let LinkApollo = ''
+
+  if (token === null)
+    LinkApollo = httpLink
+  else
+    LinkApollo = concat(authMid, httpLink)
+
   const apolloClient = new ApolloClient({
-    link: concat(authMid, httpLink),
+    link: LinkApollo,
     cache: new InMemoryCache(),
     connectToDevTools: true
   })

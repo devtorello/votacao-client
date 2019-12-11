@@ -72,6 +72,14 @@ export default {
           Turma: this.turma,
           URL: this.URL
         }
+      }).then(data => {
+        if (data) 
+          this.nome = ''
+          this.RA = ''
+          this.Turma = ''
+          this.URL = ''
+
+          this.$router.push('/admin/candidatos')
       })
     }
   }

@@ -100,17 +100,15 @@ export default {
       this.$apollo.mutate({
         mutation: gql`
           mutation (
-            $candidateRA: String!,
-            $userId: String!
+            $candidateRA: String!
           ) {
-            newVote(candidateRA: $candidateRA, userId: $userId) {
+            newVote(candidateRA: $candidateRA) {
               id
             }
           }
         `,
         variables: {
-          candidateRA: ra,
-          userId: User.data.id
+          candidateRA: ra
         }
       }).then(data => {
         if (data)
@@ -137,6 +135,10 @@ export default {
       let { data } = user
 
       return data
+    },
+    logout() {
+      Auth.remove()
+      this.$router.push('/')
     }
   }
 }
