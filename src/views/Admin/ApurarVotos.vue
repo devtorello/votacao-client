@@ -2,7 +2,7 @@
     <main>
       <div uk-grid class="uk-margin">
         <div class="uk-width-1-3">
-          <img src="https://placehold.it/400x300" class="uk-width-1-1" uk-img>
+          <img :src="winner.URL" class="uk-width-1-1" uk-img>
         </div>
         <div class="uk-width-2-3">
           <h2>O vencedor é <b class="uk-text-primary">{{ winner.fullName }}</b></h2>
@@ -60,8 +60,9 @@ export default {
     }`,
   },
   mounted () {
-    console.log(this.candidate)
-    console.log(this.votes)
+    this.$apollo.queries.candidate.refetch()
+    this.$apollo.queries.votes.refetch()
+
     this.countVotes()
     this.wins()
   },

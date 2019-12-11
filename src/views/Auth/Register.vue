@@ -16,15 +16,15 @@
       </div>
       <div class="uk-margin">
         <label class="uk-form-label">Senha</label>
-        <input type="text" class="uk-input" v-model="senha">
+        <input type="password" class="uk-input" v-model="senha">
       </div>
       <div class="uk-margin">
         <label class="uk-form-label">Confirmar Senha</label>
-        <input type="text" class="uk-input" v-model="confSenha">
+        <input type="password" class="uk-input" v-model="confSenha">
       </div>
       <div class="uk-margin">
         <button class="uk-button uk-button-default" type="button" @click="createUser">Registrar</button>
-        <button class="uk-button uk-button-text uk-margin-small-left" type="button">Cancelar</button>
+        <router-link tag="button" to="/" class="uk-button uk-button-text uk-margin-small-left" type="button">Cancelar</router-link>
       </div>
     </form>
   </div>
@@ -81,6 +81,7 @@ export default {
         this.senha = ''
         this.confSenha = ''
 
+        alert('Usuário criado!')
         this.$router.push('/')
       })
     }

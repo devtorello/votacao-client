@@ -8,10 +8,11 @@
       </div>
       <div class="uk-margin">
         <label class="uk-form-label">Senha</label>
-        <input type="text" class="uk-input" v-model="senha">
+        <input type="password" class="uk-input" v-model="senha">
       </div>
       <div class="uk-margin">
         <button class="uk-button uk-button-default" type="button" @click="login">Entrar</button>
+        <router-link tag="button" to="/" class="uk-button uk-button-text uk-margin-small-left" type="button">Cancelar</router-link>
       </div>
     </form>
   </div>
@@ -20,6 +21,7 @@
 <script>
 import Auth from '../../utils/auth'
 import gql from 'graphql-tag'
+// import User from '../../utils/user'
 
 export default {
   data() {
@@ -59,6 +61,8 @@ export default {
 
         Auth.set(data.data.signIn.token)
         this.$router.push(`/vote`)
+      }).catch(() => {
+        alert('Os dados podem estar incorretos! Tente novamente.')
       })
     }
   }

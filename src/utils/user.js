@@ -3,7 +3,7 @@ export default {
       id: null,
       firstName: null,
       lastName: null,
-      RA: null,
+      CPF: null,
       level: null
     },
 
@@ -16,9 +16,9 @@ export default {
   
     clear() {
       this.data.id = null
-      this.data.name = null
+      this.data.firstName = null
       this.data.lastName = null
-      this.data.RA = null
+      this.data.CPF = null
       this.data.level = null
     }
 }

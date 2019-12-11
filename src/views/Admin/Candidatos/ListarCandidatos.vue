@@ -1,6 +1,6 @@
 <template>
     <main>
-      <div class="uk-margin">
+      <div class="uk-margin uk-flex uk-flex-right@l">
         <router-link to="/admin/candidatos/novo" tag="button" class="uk-button uk-button-primary">Novo Candidato</router-link>
       </div>
       <div class=" uk-overflow-auto uk-height-large">
@@ -19,7 +19,7 @@
               <td>{{ c.CPF }}</td>
               <td>{{ c.Apartamento}}</td>
               <td>
-                <button class="uk-button uk-button-default">Remover</button>
+                <button class="uk-button uk-button-default" type="button" @click="remove(c.id)">Remover</button>
               </td>
             </tr>
           </tbody>
@@ -40,6 +40,7 @@ export default {
   apollo: {
     candidate: gql`query {
       candidate: allCandidates {
+        id,
         fullName,
         CPF,
         Apartamento,
@@ -55,8 +56,29 @@ export default {
     }`,
   },
   async mounted () {
+    this.$apollo.queries.candidate.refetch()
+    this.$apollo.queries.votes.refetch()
   },
   methods: {
+    remove(item) {
+      this.$apollo.mutate({
+        mutation: gql`
+          mutation (
+            $id: String!
+          ) {
+              deleteCandidate (id: $id) {
+                id
+            }
+          }
+        `,
+        variables: {
+          id: item
+        }
+      }).then(() => {
+        alert('Usuário excluído!')
+        this.$apollo.queries.candidate.refetch()
+      })
+    }
   }
 }
 </script>

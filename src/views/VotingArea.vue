@@ -1,18 +1,47 @@
 <template>
-  <div class="uk-card uk-card-primary uk-width-3-4 uk-card-body uk-dark">
-    <h1>Escolha seu candidato</h1>
-    <hr>
-    <div class="uk-child-width-1-3@m uk-overflow-auto uk-height-large uk-padding-small" uk-grid>
-      <div v-for="c in candidate" :key="c.CPF">
-        <div class="uk-card uk-card-primary ">
-            <div class="uk-card-media-top">
-              <img :src="c.URL" class="uk-width-1-1" uk-img>
-            </div>
-            <div class="uk-card-body">
-                <h3>{{ c.fullName }}</h3>
-                <a class="uk-button uk-button-default" @click="voteNow(c.CPF)">Votar</a>
-            </div>
+  <div class="uk-card uk-card-default uk-width-3-4 uk-card-body uk-dark">
+    <div v-if="voted === false">
+      <div uk-grid>
+        <div class="uk-width-expand">
+          <h1>Escolha seu candidato</h1>
         </div>
+        <div>
+          <button class="uk-button uk-button-secondary" type="button" @click="logout">Logout</button>
+        </div>
+      </div>
+      <hr>
+      <div class="uk-child-width-1-3@m uk-overflow-auto uk-height-large uk-padding-small" uk-grid>
+        <template v-if="candidate.length > 0">
+          <div v-for="c in candidate" :key="c.CPF">
+            <div class="uk-card uk-card-primary ">
+                <div class="uk-card-media-top">
+                  <img :src="c.URL" class="uk-width-1-1" uk-img>
+                </div>
+                <div class="uk-card-body">
+                    <h3>{{ c.fullName }}</h3>
+                    <a class="uk-button uk-button-default" @click="voteNow(c.CPF)">Votar</a>
+                </div>
+            </div>
+          </div>
+        </template>
+        <div v-else>
+          <h1>Não há nenhum candidato para votar!</h1>
+        </div>
+      </div>
+    </div>
+    <div class="uk-height-small" v-else>
+      <div uk-grid>
+        <div class="uk-width-expand">
+          <h1>Seu voto já foi computado!</h1>
+        </div>
+        <div>
+          <button class="uk-button uk-button-secondary" type="button" @click="logout">Logout</button>
+        </div>
+      </div>
+      <hr>
+      <div class="uk-text-center">
+        Você já votou e seu voto já foi computado,
+        portanto, espere o resultado da votação!
       </div>
     </div>
   </div>
@@ -48,7 +77,8 @@ export default {
       }
     }`
   },
-  async created () {
+  async mounted () {
+    await this.$apollo.queries.vote.refetch()
     this.user = User.data
     
     if (this.vote.CPF != null)
@@ -74,30 +104,13 @@ export default {
       }).then(data => {
         if (data)
           alert('Voto computado!')
+          this.voted = true
       }).catch(error => {
         alert(error)
       })
     },
-    async getUser() {
-      let user 
-      await this.$apollo.query({
-        query: gql`query ($CPF: String!) {
-          fetchUser (CPF: $CPF) {
-            id
-          }
-        }`,
-        variables: {
-          CPF: User.data.CPF
-        }
-      }).then(data => {
-        if (data)
-          user = data
-      })
-      let { data } = user
-
-      return data
-    },
     logout() {
+      User.clear()
       Auth.remove()
       this.$router.push('/')
     }
