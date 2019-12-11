@@ -34,11 +34,6 @@
 import gql from 'graphql-tag'
 
 export default {
-  data() {
-    return {
-      candidate: []
-    }
-  },
   apollo: {
     candidate: gql`query {
       candidate: allCandidates {
@@ -56,10 +51,9 @@ export default {
       }
     }`,
   },
-  async mounted () {
-    this.candidate = this.candidate
-  },
-  methods: {
+  mounted () {
+    this.$apollo.queries.candidate.refetch()
+    this.$apollo.queries.votes.refetch()
   }
 }
 </script>
