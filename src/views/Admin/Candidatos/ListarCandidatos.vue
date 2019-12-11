@@ -14,7 +14,7 @@
               <th class="">Ações</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody v-if="candidate.length > 0">
             <tr v-for="c of candidate" :key="c.RA">
               <td><img class="uk-preserve-width uk-border-circle" :src="c.URL" width="40" alt=""></td>
               <td>{{ c.fullName }}</td>
@@ -23,6 +23,11 @@
               <td>
                 <button class="uk-button uk-button-default">Remover</button>
               </td>
+            </tr>
+          </tbody>
+          <tbody v-else>
+            <tr>
+              <td colspan="5">Não há nenhum candidato cadastrado!</td>
             </tr>
           </tbody>
         </table>

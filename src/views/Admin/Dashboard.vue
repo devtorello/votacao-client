@@ -23,6 +23,7 @@
 <script>
 import gql from 'graphql-tag'
 import Auth from '../../utils/auth'
+import User from '../../utils/user'
 
 export default {
   data() {
@@ -50,6 +51,7 @@ export default {
   },
   methods: {
     logout() {
+      User.clear
       Auth.remove()
       this.$router.push('/')
     }

@@ -23,12 +23,17 @@
             <th>Botão</th>
           </thead>
           <tbody class="uk-overflow-auto">
-            <tr v-for="c of candidate" :key="c.RA">
-              <td><img class="uk-preserve-width uk-border-circle" :src="c.URL" width="40" alt=""></td>
-              <td>{{ c.fullName }}</td>
-              <td>{{ c.Turma }}</td>
-              <td>{{ c.RA }}</td>
-              <td><button type="button" class="uk-button uk-button-secondary" @click="voteNow(c.RA)">Votar</button></td>
+            <template v-if="candidate.length > 0">
+              <tr v-for="c of candidate" :key="c.RA">
+                <td><img class="uk-preserve-width uk-border-circle" :src="c.URL" width="40" alt=""></td>
+                <td>{{ c.fullName }}</td>
+                <td>{{ c.Turma }}</td>
+                <td>{{ c.RA }}</td>
+                <td><button type="button" class="uk-button uk-button-secondary" @click="voteNow(c.RA)">Votar</button></td>
+              </tr>
+            </template>
+            <tr v-else>
+              <td colspan="5">Não há nenhum candidato para votar!</td>
             </tr>
           </tbody>
         </table>
