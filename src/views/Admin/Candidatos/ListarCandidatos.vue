@@ -14,10 +14,10 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="i in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]" :key="i">
-              <td>Murilo Pereti Tavares</td>
-              <td>469.267.118-10</td>
-              <td>33</td>
+            <tr v-for="c in candidate" :key="c.CPF">
+              <td>{{ c.fullName }}</td>
+              <td>{{ c.CPF }}</td>
+              <td>{{ c.Apartamento}}</td>
               <td>
                 <button class="uk-button uk-button-default">Remover</button>
               </td>
@@ -29,7 +29,34 @@
 </template>
 
 <script>
+import gql from 'graphql-tag'
+
 export default {
-  
+  data() {
+    return {
+      candidate: []
+    }
+  },
+  apollo: {
+    candidate: gql`query {
+      candidate: allCandidates {
+        fullName,
+        CPF,
+        Apartamento,
+        URL
+      }
+    }`,
+    votes: gql`query {
+      votes: allVotes {
+        id
+        CPF
+        userId  
+      }
+    }`,
+  },
+  async mounted () {
+  },
+  methods: {
+  }
 }
 </script>

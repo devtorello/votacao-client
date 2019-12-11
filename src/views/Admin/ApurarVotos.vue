@@ -5,8 +5,8 @@
           <img src="https://placehold.it/400x300" class="uk-width-1-1" uk-img>
         </div>
         <div class="uk-width-2-3">
-          <h2>O vencedor é <b class="uk-text-primary">Murilo Pereti Tavares</b></h2>
-          <p class="uk-text-lead">O candidato Murilo Pereti Tavares, venceu a eleição com um total de 66 votos, representando 74% dos votos.</p>
+          <h2>O vencedor é <b class="uk-text-primary">{{ winner.fullName }}</b></h2>
+          <p class="uk-text-lead">O candidato {{ winner.fullName }}, venceu a eleição com um total de {{ winner.count }} votos.</p>
         </div>
       </div>
       <div class=" uk-overflow-auto uk-height-medium">
@@ -19,10 +19,10 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="i in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]" :key="i">
-              <td>Murilo Pereti Tavares</td>
-              <td>469.267.118-10</td>
-              <td>66</td>
+            <tr v-for="c in candidates" :key="c.CPF">
+              <td>{{ c.fullName }}</td>
+              <td>{{ c.CPF }}</td>
+              <td>{{ c.count }}</td>
             </tr>
           </tbody>
         </table>
@@ -31,7 +31,68 @@
 </template>
 
 <script>
+import gql from 'graphql-tag'
+
 export default {
-  
+  data() {
+    return {
+      candidate: [],
+      votes: [],
+      candidates: {},
+      winner: {}
+    }
+  },
+  apollo: {
+    candidate: gql`query {
+      candidate: allCandidates {
+        fullName,
+        CPF,
+        Apartamento,
+        URL
+      }
+    }`,
+    votes: gql`query {
+      votes: allVotes {
+        id
+        CPF
+        userId  
+      }
+    }`,
+  },
+  mounted () {
+    console.log(this.candidate)
+    console.log(this.votes)
+    this.countVotes()
+    this.wins()
+  },
+  methods: {
+    countVotes() {
+      this.candidates = {}
+
+      for (let c of this.candidate) {
+        let count = 0
+        for (let v of this.votes) {
+          if (c.CPF === v.CPF)
+            count++
+        }
+
+        this.candidates[c.CPF] = c
+        this.candidates[c.CPF].count = count
+
+        count = 0
+      }
+    },
+    wins() {
+      const candidateList = Object.keys(this.candidates).map(i => this.candidates[i])
+      let prevVal = 0
+
+      for (let c of candidateList) {
+        if (c.count > prevVal) {
+          prevVal = c.count
+          this.winner = c
+        }
+      }
+    }
+  }
 }
 </script>
