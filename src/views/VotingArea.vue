@@ -82,7 +82,8 @@ export default {
       }
     }`
   },
-  async created () {
+  async mounted () {
+    await this.$apollo.queries.vote.refetch()
     this.user = User.data
     
     if (this.vote.candidateRA != null)
@@ -113,6 +114,7 @@ export default {
       }).then(data => {
         if (data)
           alert('Voto computado!')
+        this.voted = true
       }).catch(error => {
         alert(error)
       })

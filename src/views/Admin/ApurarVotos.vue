@@ -84,7 +84,6 @@ export default {
     },
     wins() {
       const candidateList = Object.values(this.candidates)
-      let prevVal = 0
       const winner = candidateList.reduce((p, c) => c.count > p.count ? c : p)
       this.winner = winner
     }
